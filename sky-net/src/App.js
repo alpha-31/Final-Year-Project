@@ -1,19 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import 'antd/dist/antd.css';
+import { AccountBox } from "./Components/accountBox";
 
+import styled from 'styled-components';
+const AppContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p >
-          <marquee >
-           Coming soon A Web app  
-          </marquee>>  
-        </p>
-       
-      </header>
-    </div>
+   <>
+   <AppContainer><AccountBox/></AppContainer>
+   </>
   );
 }
 
