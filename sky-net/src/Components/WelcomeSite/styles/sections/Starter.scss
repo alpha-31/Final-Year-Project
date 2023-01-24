@@ -1,0 +1,99 @@
+@import "../utils/Colors.scss";
+@import "../index.css";
+.main-container {
+  // margin: 0 10rem;
+  margin: 0 10%;
+  margin-bottom: 5rem;
+  .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    .content {
+      margin-top: 3.4rem;
+      margin-right: 2.3rem;
+      h1 {
+        font-size: 2.7rem;
+        font-weight: bold;
+        color: $headingColor;
+        line-height: 2.8rem;
+      }
+      p {
+        margin-top: 2rem;
+        font-size: 1.1rem;
+        color: $lightFontColor;
+        line-height: 1.5rem;
+      }
+      .button-container {
+        display: flex;
+        button {
+          margin-right: 1rem;
+        }
+      }
+    }
+    .image {
+      img {
+        margin-top: 6rem;
+        
+        padding-left: 2rem;
+        height: 22rem;
+        width: 36rem;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 280px) and (max-width: 480px) {
+  .main-container {
+    .container {
+      grid-template-columns: 1fr;
+      .content {
+        margin-right: 0;
+        h1 {
+          font-size: 4rem;
+          line-height: 4.2rem;
+        }
+        p {
+          font-size: 2rem;
+          line-height: 2.5rem;
+        }
+      }
+      .image {
+        margin-left: -1rem;
+        img {
+          height: 25rem;
+          width: 35rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 8px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .main-container {
+    padding-bottom: 3rem;
+    .container {
+      .content {
+        h1 {
+          font-size: 2rem;
+          line-height: 2rem;
+        }
+        p {
+          font-size: 1rem;
+          line-height: 1.4rem;
+        }
+      }
+      .image {
+        img {
+          height: 30rem;
+          width: 30rem;
+        }
+      }
+    }
+  }
+}

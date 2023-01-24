@@ -1,21 +1,24 @@
 import './App.css';
+import './Components/WelcomeSite/styles/index.css' ;
 import 'antd/dist/antd.min.css'
-import { AccountBox } from "./Components/accountBox";
-
 import styled from 'styled-components';
-const AppContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
+import Starter from './Components/WelcomeSite/sections/Starter';
+import About from './Components/WelcomeSite/sections/About';
+import Why from './Components/WelcomeSite/sections/Why';
+import Testimonials from './Components/WelcomeSite/sections/Testimonials';
+import Footer from './Components/WelcomeSite/sections/Footer';
+import ScrollToTop from './Components/WelcomeSite/components/ScrollToTop';
+import { motion } from 'framer-motion';
 function App() {
   return (
-   <>
-   <AppContainer><AccountBox/></AppContainer>
-   </>
+   <motion.div initial="hidden" animate="show" >
+   <ScrollToTop/>
+   <Starter/>
+   <About/>
+   <Why/>
+   <Testimonials/>
+   <Footer/>
+   </motion.div>
   );
 }
 
