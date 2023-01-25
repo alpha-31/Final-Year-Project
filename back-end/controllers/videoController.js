@@ -1,43 +1,67 @@
 //videoController.js
-exports.uploadVideo = async (req, res) => {
+const axios = require('axios');
+const {Video} = require('../models/video.js');
+const NotFoundError = require('../errors/not-found-error');
+const VideoController = require('../controllers/videoController');
+const upload = require('../services/uploadVideo');
+const { getVideoDurationInSeconds } = require('get-video-duration')
+
+
+exports.uploadVideo = async (req, res, next) => {
+  
+  const project_path = "F:/FYP/Sky-Net(A Web App)/Final-Year-Project/back-end/" ;
+
+  let file_duration = 0;
+  // From a local path...
+  await getVideoDurationInSeconds(req.file.path).then((duration) => {
+    let temp = duration /60;
+    file_duration= temp.toFixed(2);
+  })
+
+
+
+  try {
     const video = new Video({
-        video: req.file.path,
-        owner: req.currentUser._id
-    });
+      file: project_path+ "uploads/Videos/"+ req.file.filename ,
+      user: req.currentUser.db_id ,
+      uploadDate: new Date(),
+      size: req.file.size,
+      duration: file_duration,  
+      results : {processed: false}});
+
     await video.save();
-    res.status(201).send({ data: { video } });
-}
+    res.status(201).send({ data: { video: req.file } }); 
+  }catch (err) {
+    next(err);
+  }
+ 
+};
 
 
 exports.analyzeVideo = async (req, res) => {
     const video = await Video.findById(req.params.id);
+
     if (!video) {
         throw new NotFoundError();
     }
-
     // perform video analysis here
-    const results = {...[]};
+    let results;
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/process_video', {
+        "file_path": video.file
+      });
+      results = response.data;
+      // console.log(results);
+      video.results = {...results};
+      await video.save();
+    } catch (error) {
+      console.log(error);
+    }
 
-    video.results = results;
-    await video.save();
-
-    res.send({ data: { video } });
+    res.send({ results : video.results } );
 }
 
 
-exports.upload = upload.single('file'), async (req, res, next) => {
-  try {
-    const video = new Video({
-      file: req.file.path,
-      user: req.currentUser._id,
-      uploadDate: new Date()
-    });
-    await video.save();
-    res.status(201).send(video);
-  } catch (err) {
-    next(err);
-  }
-};
 
 exports.getVideo = async (req, res, next) => {
   try {
@@ -51,11 +75,17 @@ exports.getVideo = async (req, res, next) => {
   }
 };
 
-exports.update = async (req, res, next) => {
-  
+exports.getAllVideos = async (req, res, next) => {
+  try {
+    const videos = await Video.find();
+    res.send(videos);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.delete = async (req, res, next) => {
+
+exports.deleteVideo = async (req, res, next) => {
   try {
     const video = await Video.findById(req.params.id);
     if (!video) {
@@ -67,38 +97,4 @@ exports.delete = async (req, res, next) => {
     next(err);
   }
 };
-const Video = require('../models/video');
-const { sendMail } = require('../services/mailer');
-const { classify } = require('../services/classify');
 
-exports.upload = async (req, res) => {
-  try {
-    const video = new Video({
-      file: req.file.buffer,
-      user: req.model._id,
-      uploadDate: Date.now()
-    });
-
-    const classificationResults = await classify(req.file.buffer);
-    video.classificationResults = classificationResults;
-
-    await video.save();
-
-    const user = await req.model.populate('user').execPopulate();
-    sendMail(user.email, 'Video Uploaded', 'Your video has been uploaded and classified');
-
-    res.status(201).send(video);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
-
-
-exports.getAll = async (req, res) => {
-  try {
-    const videos = await Video.find({ user: req.model._id });
-    res.send(videos);
-  } catch (error) {
-    res.status(500).send();
-  }
-};

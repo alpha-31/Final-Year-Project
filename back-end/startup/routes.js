@@ -26,7 +26,7 @@ module.exports = function(app) {
     app.use('/api/user', user);
     app.use('/api/test', require('../routes/test'));
     app.use('/api/admin', require('../routes/adminRoutes'));
-    
+    app.use('/videos', express.static('uploads/Videos/'));
     
     app.all('*', async (req,res,next) => {
         next(new NotFoundError());

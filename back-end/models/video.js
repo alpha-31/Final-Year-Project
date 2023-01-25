@@ -14,7 +14,15 @@ const videoSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  classificationResults: {
+  size : {
+    type: Number,
+    default: 0
+  },
+  duration: {
+    type: Number,
+    default: 0
+  },
+  results: {
     type: Object
   }
 });
@@ -22,4 +30,4 @@ const videoSchema = new mongoose.Schema({
 const Video = mongoose.model('videos', videoSchema);
 
 
-module.Video = Video;
+exports.Video = Video;

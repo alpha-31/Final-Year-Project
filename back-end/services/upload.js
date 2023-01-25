@@ -1,5 +1,5 @@
 const multer = require('multer');
-
+const path = require('path');
 const fileFilter = (req, file, cb) => {
   if (!file.originalname.match(/\.(jpeg|jpg|png|mp4)$/)) {
     return cb(
@@ -18,7 +18,7 @@ const upload = multer({
       cb(null, __dirname + '/../uploads/');
     },
     filename(req, file, cb) {
-      cb(null, `${new Date().getTime()}_${file.originalname}`);
+      cb(null, `${file.filename}_${new Date().getTime()}_${file.originalname}`);
     }
   }),
   
