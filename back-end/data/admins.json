@@ -1,0 +1,16 @@
+[{
+  "ID": "A-23-0001",
+  "name": "SkyNet Admin Talha",
+  "email": "admin.mtm@skynet.com",
+  "password": "SkynetAdmin@mtm"
+},{
+  "ID": "A-23-0002",
+  "name": "SkyNet Admin Sheikh",
+  "email": "admin.saw@skynet.com",
+  "password": "SkynetAdmin@saw"
+},{
+  "ID": "A-23-0008",
+  "name": "SkyNet Admin Sohaib",
+  "email": "admin.msr@skynet.com",
+  "password": "SkynetAdmin@msr"
+}]
