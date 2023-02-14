@@ -1,16 +1,19 @@
 const mailer = require('nodemailer')
 
 async function sendMail(email, subject, text){
-  let mailTransport = mailer.createTransport({
-    service: 'gmail',
+
+  var mailTransport = mailer.createTransport({
+    host: "sandbox.smtp.mailtrap.io",
+    port: 2525,
     auth: {
-        user: 'sheikhabdul.wahid.eagle@gmail.com',
-        pass: '@Sqe4321'
+      user: "16bee199c60a94",
+      pass: "3935c8461f857c"
     }
   });
 
+
   let mailDetails = {
-    from: 'sheikhabdul.wahid.eagle@gmail.com',
+    from: 'admin@skynet.com',
     to: email,
     subject,
     text

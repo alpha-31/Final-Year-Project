@@ -10,8 +10,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         maxLength: 9,
         minLength: 9,
-        pattern: "^[A-Za-z0-9]{3}-[A-Za-z0-9]{5}$"
-        
+        pattern: "^[A-Za-z0-9]{3}-[A-Za-z0-9]{5}$"   
     },
     name: {
         type: String,
@@ -30,10 +29,18 @@ const userSchema = new mongoose.Schema({
         default: "siba@1234"
     },
     subscription_plan: {
-        type: String,
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'subscription_plans'
+    },
+    plan_left_size: {
+        type: Number,
         required: true,
-        enum: ['free', 'premium', 'enterprise'],
-        default: 'free'
+        default: 0
+    },
+    plan_left_time: {
+        type: Number,
+        required: true,
+        default: 0
     },
     subscription_status: {
         type: String,
@@ -43,7 +50,7 @@ const userSchema = new mongoose.Schema({
     },
     joiningDate: {
         type: Date,
-        required: false,
+        required: true,
         default: Date.now,
     }
 });
@@ -62,7 +69,9 @@ function validateUser (user) {
         name: joi.string().required(),
         email: joi.string().required(),
         password: joi.string().required(),
-        subscription_plan: joi.string().required(),
+        plan_left_size: joi.number().required(),
+        plan_left_time: joi.number().required(),
+        subscription_plan: joi.string().optional(),
         subscription_status: joi.string().required(),
         joiningDate: joi.date().required() 
     });

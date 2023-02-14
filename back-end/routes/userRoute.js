@@ -9,7 +9,7 @@ const signIn = require('../routes/signIn');
 const joi = require('joi');
 const {User} = require('../models/user');
 const changePassword = require('../routes/changePassword');
-const {signup, viewInfo, updateInfo  } = require('../controllers/userController');
+const {signup, viewInfo, updateInfo , subscribe } = require('../controllers/userController');
 const {uploadVideo , analyzeVideo , getAllVideos , deleteVideo } = require('../controllers/videoController');
 const uploadService = require('../services/uploadVideo');
 
@@ -20,16 +20,18 @@ const uploadService = require('../services/uploadVideo');
 router.use(currentUser)
 router.post('/signup', signup);
 router.post('/signin',setRequest(User , 'User') , signIn);
+router.use(authenticate)
 router.use('/changePassword', [authenticate ,setRequest(User, 'User')], changePassword);
 router.use('/resetPassword', [reset, setRequest(User, 'User')], changePassword);
 router.get('/viewInfo', authenticate, viewInfo);
 router.put('/updateInfo/:id',validateRequest(reqValidationUpdate), authenticate, updateInfo);
 
 router.post('/upload', [currentUser , uploadService.single('video') ] , uploadVideo);
-router.get('/analyze/:id', [currentUser], analyzeVideo);
+router.post('/analyze/:id', [currentUser], analyzeVideo);
 router.get('/getAllVideos', [currentUser], getAllVideos);
 router.delete('/delete/:id', [currentUser], deleteVideo);
 
+router.post('/subscribe/:id', [currentUser], subscribe)
 
 
 function reqValidationUpdate(req) {

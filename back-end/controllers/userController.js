@@ -1,10 +1,13 @@
 const {User} = require('../models/user');
+const {UserRequest , validateUserRequest} = require('../models/userRequest');
 const BadRequestError  = require('../errors/bad-req-error');
 const {validateUser} = require('../models/user');
 const createID = require('../services/createID');
 const cuurentUser = require('../routes/currentUser');
+const { SubscriptionPlan } = require('../models/subscriptionPlan');
 const NotFoundError = require('../errors/not-found-error');
 const jwt = require('jsonwebtoken');
+const sendEmail = require('../services/sendMail');
 const _ = require('lodash');
 
 exports.signup = async (req, res) => {
@@ -15,9 +18,6 @@ exports.signup = async (req, res) => {
     user = new User({
         name: req.body.name,
         email: req.body.email,
-        subscription_plan: "free",
-        subscription_status: 'pending',
-        subscription_date: Date.now(),
     });
     user.password = req.body.password;
     user.ID = await createID("User");
@@ -37,52 +37,57 @@ exports.viewInfo = async (req, res) => {
 }
 
 exports.updateInfo =  async (req, res) => {
+    // update user info
+    const user  = await User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true, runValidators: true});
+    if (!user)
+    {
+        return new NotFoundError();
+    }
 
-    // const { currentUser } = req;
-    // const {email } = currentUser ;
-    // const user = await User.findOne({email});
-    // if (!user)
-    //     return new NotFoundError();
-
-    // const updates = Object.keys(req.body);
-    // const allowedUpdates = ['name', 'password'];
-    // const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
-
-    // if (!isValidOperation) 
-    // {
-    //         throw new BadRequestError('Invalid updates! Not allowed to update this field');
-    // }
-
-    // updates.forEach((update) => user[update] = req.body[update]);
-
-    // await user.save();
-    // const userJwt = jwt.sign(
-    //     {
-    //         ID: req.body.ID,
-    //         name: req.body.name,
-    //         email: req.body.email,
-    //         role: req.role
-    //     }, 'JWT-Private'
-    // );
-
-    // req.session = {
-    //     jwt: userJwt
-    // };
-    // req.body.role = req.role
-
-    res.status(501).send({message: 'Not implemented'});
-    // res.status(200).send(_.pick(user, ['ID','name','email', 'role']));
-    
-
-    
+    res.status(200).send(_.pick(user, ['ID', 'name','email']));
 }
 
-
-
-exports.delete = async (req, res) => {
+exports.subscribe = async (req, res) => {
+    
     const { currentUser } = req;
-    await currentUser.remove();
-    res.send({ message: 'User deleted successfully!' });
+    const {db_id} = currentUser ;
+    const subs_id = req.params.id ;
+
+    const subscription_plan =  await SubscriptionPlan.findById(subs_id);
+    const user = await User.findById(db_id);
+     
+    if (!user)
+    {
+        return new NotFoundError();
+    }
+    if (!subscription_plan)
+    {
+        return new NotFoundError();
+    }
+    const request = await UserRequest.findOne(
+        {$and :[ {user_id: db_id , plan_id: subs_id, status: {$eq: 'pending'} } ]}    
+    ); 
+
+    if (request)
+    {
+        return res.status(400).send({message: 'Request already exists', data: request});
+    }
+    //create a new user request
+    const userRequest = new UserRequest({
+        user_id: user._id,
+        plan_id: subs_id,
+    });
+    // console.log(userRequest);
+    await userRequest.save();
+    // send email to user
+    const subject = 'Subscription Request';
+    // create a dynamic body with the user name and the subscription plan name 
+    const body = `Dear ${user.name}, \n Your request for subscription plan which is ${subscription_plan.name} has been sent successfully to the Admin. \n You will be notified once your request is approved. \n Thank you`;
+    await sendEmail(user.email, subject, body);
+
+
+    res.status(201).send({message: 'User Request Sent successfully'});
+
 }
 
 

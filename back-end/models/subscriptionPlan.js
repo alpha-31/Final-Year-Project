@@ -10,6 +10,7 @@ const subscriptionPlanSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+
   desc: {
     type: String,
     required: true
@@ -17,6 +18,14 @@ const subscriptionPlanSchema = new mongoose.Schema({
   features: {
     type: [String],
     required: true 
+  },
+  spec : {
+    size : {
+      type: Number,
+      },
+      time : {
+        type: Number,
+      }
   },
   subscription_type: {
     type: String,
@@ -40,6 +49,10 @@ exports.ValidateSubscriptionPlan = (subscriptionPlan) => {
     price: joi.number().required(),
     desc: joi.string().required(),
     features: joi.array().required(),
+    spec : joi.object({
+      size : joi.number().optional(),
+      time : joi.number().optional()
+    }).required(),
     subscription_type: joi.string().valid('size', 'time').required(),
     status: joi.string().valid('active', 'inactive').required()
   });

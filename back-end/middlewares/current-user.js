@@ -6,7 +6,7 @@ function currentUser (req, res, next) {
   
     // console.log('currentUser');
     if (!req.session.jwt) {
-      console.log('No JWT')
+      // console.log('No JWT')
         return next();
       }
 

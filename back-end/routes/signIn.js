@@ -31,7 +31,8 @@ router.post('/signin',validateRequest(reqValidation) ,async (req, res) => {
             name: checkUser.name,
             email: checkUser.email,
             role: req.role
-        }, 'JWT-Private'
+        }, 'JWT-Private' ,
+
     );
 
     req.session = {
