@@ -18,22 +18,22 @@ const {approveRequest ,getAllUserRequests , getUserRequest , getAllRequestsByTyp
 const router = express.Router();
 
 router.use(currentUser);
-router.post('/signin',setRequest(Admin , 'Admin') , signIn);
+router.post('/signin',setRequest(Admin , 'admin') , signIn);
 // router.use(authenticate);
-router.use('/change', [reset, setRequest(Admin, 'Admin'), verification(['Admin'])], changePassword);
+router.use('/change', [reset, setRequest(Admin, 'admin'), verification(['admin'])], changePassword);
 
 //manage subscription plans
-router.post('/createPlan',[currentUser, setRequest(Admin, 'Admin'),validateReq(ValidateSubscriptionPlan) ]  , createPlan);
+router.post('/createPlan',[currentUser, setRequest(Admin, 'admin'),validateReq(ValidateSubscriptionPlan) ]  , createPlan);
 router.put('/updatePlan/:id',validateReq(SubscriptionPlanUpdateValidator), updatePlan);
 router.delete('/deletePlan/:id', deletePlan);
 router.get('/getPlans', getPlans);
 router.get('/getPlan/:id', getPlan);
 
 //manage user requests
-router.get('/getAllUserRequests',[currentUser, setRequest(Admin, 'Admin')], getAllUserRequests);
-router.get('/getRequest/:id',[currentUser, setRequest(Admin, 'Admin')], getUserRequest);
-router.post('/approveRequest/:id',[currentUser, setRequest(Admin, 'Admin')], approveRequest);
-router.post('/rejectRequest/:id',[currentUser, setRequest(Admin, 'Admin')], rejectRequest);
+router.get('/getAllUserRequests',[currentUser, setRequest(Admin, 'admin')], getAllUserRequests);
+router.get('/getRequest/:id',[currentUser, setRequest(Admin, 'admin')], getUserRequest);
+router.post('/approveRequest/:id',[currentUser, setRequest(Admin, 'admin')], approveRequest);
+router.post('/rejectRequest/:id',[currentUser, setRequest(Admin, 'admin')], rejectRequest);
 router.get('/getAllApprovedRequests',[currentUser, setRequestType('accepted')], getAllRequestsByType);
 router.get('/getAllRejectedRequests',[currentUser, setRequestType('rejected')], getAllRequestsByType);
 router.get('/getAllPendingRequests',[currentUser, setRequestType('pending')], getAllRequestsByType);

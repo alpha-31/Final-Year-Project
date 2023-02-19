@@ -65,12 +65,16 @@ exports.subscribe = async (req, res) => {
         return new NotFoundError();
     }
     const request = await UserRequest.findOne(
-        {$and :[ {user_id: db_id , plan_id: subs_id, status: {$eq: 'pending'} } ]}    
+        {user_id: db_id , plan_id: subs_id} 
     ); 
 
-    if (request)
+    if (request.status == 'accepted')
     {
         return res.status(400).send({message: 'Request already exists', data: request});
+    }
+    if (request.status == 'pending')
+    {
+        return res.status(400).send({message: 'Request already exists and is pending', data: request});
     }
     //create a new user request
     const userRequest = new UserRequest({

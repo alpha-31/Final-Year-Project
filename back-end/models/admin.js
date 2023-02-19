@@ -30,6 +30,6 @@ adminSchema.pre('save', async function(next) {
     next();
 });
 
+const Admin = mongoose.model('Admin', adminSchema);
 
-
-exports.Admin = mongoose.model('Admin', adminSchema);
+exports.Admin = Admin ;

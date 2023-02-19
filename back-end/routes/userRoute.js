@@ -7,6 +7,7 @@ const setRequest = require('../middlewares/setRequest')
 const validateRequest = require('../middlewares/validate-req');
 const signIn = require('../routes/signIn');
 const joi = require('joi');
+const setRequestType = require('../middlewares/setRequestType');
 const {User} = require('../models/user');
 const changePassword = require('../routes/changePassword');
 const {signup, viewInfo, updateInfo , subscribe } = require('../controllers/userController');
@@ -27,7 +28,8 @@ router.get('/viewInfo', authenticate, viewInfo);
 router.put('/updateInfo/:id',validateRequest(reqValidationUpdate), authenticate, updateInfo);
 
 router.post('/upload', [currentUser , uploadService.single('video') ] , uploadVideo);
-router.post('/analyze/:id', [currentUser], analyzeVideo);
+router.post('/analyzeBySize/:id', [currentUser, setRequestType('size')], analyzeVideo);
+router.post('/analyzeByTime/:id', [currentUser, setRequestType('time')], analyzeVideo);
 router.get('/getAllVideos', [currentUser], getAllVideos);
 router.delete('/delete/:id', [currentUser], deleteVideo);
 
