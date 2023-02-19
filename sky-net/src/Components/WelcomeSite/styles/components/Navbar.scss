@@ -24,15 +24,15 @@
           a {
             text-decoration: none;
             font-size: 1.2rem;
-            color: $blueColor;
+            color: #21897e;
             &:hover {
               color: $buttonPinkColor;
             }
             &:focus {
-              color: $blueColor;
+              color: #69d1c5;
             }
             &:active {
-              color: $blueColor;
+              color: #21897e;
             }
           }
           text-transform: uppercase;

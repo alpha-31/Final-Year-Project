@@ -8,6 +8,8 @@ import Navbar from '../components/Navbar';
 import {motion} from 'framer-motion';
 import {headerAnimation , imageAnimation} from '../utils/Animations';
 import { useScroll } from "../components/useScroll";
+
+
 function Starter() {
   const [element, controls] = useScroll();
   return (
@@ -20,8 +22,8 @@ function Starter() {
           transition={{delay:0.2,type:"tween"}}>
             <h1> A Web application helping Law enforcement Agencies against car theft </h1>
             <p>
-                This web application will include all the thing 
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem nulla eos ipsa odit fuga 
+                This web application will include all the thing to help us in order to reduce
+                manpower wasted in searching for stolen cars and also to reduce the time taken to find the stolen car.
                 
             </p>
           
